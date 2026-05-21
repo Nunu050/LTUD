@@ -75,33 +75,46 @@ export default function HomeScreen() {
 
       <Text style={styles.sectionTitle}>Recommended for you 🍴</Text>
 
-      {/* FOODS */}
-      {currentFoods.map((food) => (
-        <TouchableOpacity
-          key={food.id}
-          style={styles.foodCard}
-          onPress={() =>
-            navigation.navigate("Map", {
-              selectedFood: food.category,
-              selectedMood: selectedMood.title,
-            })
-          }
-        >
-          <Image
-            source={{ uri: food.imageUrl }}
-            style={styles.foodImage}
-          />
-          <View style={styles.foodInfo}>
-            <View style={styles.foodHeader}>
-              <Text style={styles.foodName}>
-                {food.name} {food.emoji}
-              </Text>
-              <Text style={styles.rating}>⭐ 4.8</Text>
+    {/* FOODS */}
+      {currentFoods.map((food) => {
+        // Generate a pseudo-random rating between 4.0 and 5.0 based on food id
+        let hash = 0;
+        for (let i = 0; i < food.id.length; i++) {
+          hash = food.id.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const randomRating = (4.0 + Math.abs(Math.sin(hash))).toFixed(1);
+
+        return (
+          <TouchableOpacity
+            key={food.id}
+            style={styles.foodCard}
+            onPress={() =>
+              navigation.navigate("Map", {
+                selectedFood: food.category,
+                selectedMood: selectedMood.title,
+              })
+            }
+          >
+            <Image
+              source={
+                typeof food.imageUrl === "string"
+                  ? { uri: food.imageUrl }
+                  : food.imageUrl
+              }
+              style={styles.foodImage}
+            />
+            <View style={styles.foodInfo}>
+              <View style={styles.foodHeader}>
+                <Text style={styles.foodName}>
+                  {food.name} {food.emoji}
+                </Text>
+                <Text style={styles.rating}>⭐ {randomRating}</Text>
+              </View>
+              <Text style={styles.foodDesc}>{food.description}</Text>
             </View>
-            <Text style={styles.foodDesc}>{food.description}</Text>
-          </View>
-        </TouchableOpacity>
-      ))}
+          </TouchableOpacity>
+        );
+      })}
       <View style={styles.bottomPadding} />
     </ScrollView>
   );
