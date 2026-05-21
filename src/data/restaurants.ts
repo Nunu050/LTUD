@@ -106,7 +106,7 @@ export const restaurants: Restaurant[] = [
   // 26. Bia Craft
   { id: "r53", name: "C-Brewmaster Biên Hòa", address: "Đường số 7", latitude: 10.9510, longitude: 106.8400, category: "Bia Craft", image: "https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7" },
   { id: "r54", name: "Bia Tươi Đức Biên Hòa", address: "Võ Thị Sáu", latitude: 10.9535, longitude: 106.8385, category: "Bia Craft", image: "https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7" },
-  
+
   // 27. Salad
   { id: "r55", name: "Salad Cá Hồi The Leaf", address: "Võ Thị Sáu", latitude: 10.9514, longitude: 106.8352, category: "Salad", image: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe" },
   { id: "r56", name: "Green Box", address: "Phan Trung", latitude: 10.9582, longitude: 106.8445, category: "Salad", image: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe" },
