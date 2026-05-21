@@ -15,17 +15,17 @@ export const restaurants: Restaurant[] = [
   { id: "r7", name: "Jollibee", address: "Big C Tân Hiệp", latitude: 10.9632, longitude: 106.8621, category: "Gà Rán", image: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec" },
 
   // 4. Trà Sữa
-  { id: "r8", name: "Gong Cha", address: "Vincom Biên Hòa", latitude: 10.9540, longitude: 106.8426, category: "Trà Sữa", image: "https://images.unsplash.com/photo-1558138838-7629396cb726" },
-  { id: "r9", name: "Phúc Long Coffee & Tea", address: "Pegasus Plaza", latitude: 10.9536, longitude: 106.8376, category: "Trà Sữa", image: "https://images.unsplash.com/photo-1558138838-7629396cb726" },
-  { id: "r10", name: "KOI Thé", address: "Vincom Biên Hòa", latitude: 10.9541, longitude: 106.8427, category: "Trà Sữa", image: "https://images.unsplash.com/photo-1558138838-7629396cb726" },
+  { id: "r8", name: "Gong Cha", address: "Vincom Biên Hòa", latitude: 10.9540, longitude: 106.8426, category: "Trà Sữa", image: "https://image.pollinations.ai/prompt/colorful%20Vietnamese%20bubble%20tea%20with%20visible%20tapioca%20pearls%20toppings%20cafe%20aesthetic?width=800&height=600&nologo=true" },
+  { id: "r9", name: "Phúc Long Coffee & Tea", address: "Pegasus Plaza", latitude: 10.9536, longitude: 106.8376, category: "Trà Sữa", image: "https://image.pollinations.ai/prompt/colorful%20Vietnamese%20bubble%20tea%20with%20visible%20tapioca%20pearls%20toppings%20cafe%20aesthetic?width=800&height=600&nologo=true" },
+  { id: "r10", name: "KOI Thé", address: "Vincom Biên Hòa", latitude: 10.9541, longitude: 106.8427, category: "Trà Sữa", image: "https://image.pollinations.ai/prompt/colorful%20Vietnamese%20bubble%20tea%20with%20visible%20tapioca%20pearls%20toppings%20cafe%20aesthetic?width=800&height=600&nologo=true" },
 
   // 5. Buffet
   { id: "r11", name: "Dookki Biên Hòa", address: "Vincom Biên Hòa", latitude: 10.9545, longitude: 106.8425, category: "Buffet", image: "https://images.unsplash.com/photo-1576867757603-05b134ebc379" },
   { id: "r12", name: "Hoàng Yến Buffet", address: "Pegasus Plaza", latitude: 10.9537, longitude: 106.8374, category: "Buffet", image: "https://images.unsplash.com/photo-1576867757603-05b134ebc379" },
 
   // 6. Lẩu Thái
-  { id: "r13", name: "Kichi Kichi", address: "Vincom Biên Hòa", latitude: 10.9545, longitude: 106.8425, category: "Lẩu Thái", image: "https://images.unsplash.com/photo-1552611052-33e04de081de" },
-  { id: "r14", name: "Hutong", address: "Pegasus Plaza", latitude: 10.9538, longitude: 106.8378, category: "Lẩu Thái", image: "https://images.unsplash.com/photo-1552611052-33e04de081de" },
+  { id: "r13", name: "Kichi Kichi", address: "Vincom Biên Hòa", latitude: 10.9545, longitude: 106.8425, category: "Lẩu Thái", image: "https://image.pollinations.ai/prompt/delicious%20Thai%20seafood%20hotpot%20with%20shrimp%20mushrooms%20noodles%20spicy%20soup%20realistic%20food%20photography?width=800&height=600&nologo=true" },
+  { id: "r14", name: "Hutong", address: "Pegasus Plaza", latitude: 10.9538, longitude: 106.8378, category: "Lẩu Thái", image: "https://image.pollinations.ai/prompt/delicious%20Thai%20seafood%20hotpot%20with%20shrimp%20mushrooms%20noodles%20spicy%20soup%20realistic%20food%20photography?width=800&height=600&nologo=true" },
 
   // 7. Bánh Ngọt
   { id: "r15", name: "Đồng Tiến Bakery", address: "Nguyễn Ái Quốc", latitude: 10.9615, longitude: 106.8415, category: "Bánh Ngọt", image: "https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b" },
@@ -36,8 +36,8 @@ export const restaurants: Restaurant[] = [
   { id: "r18", name: "Phở Trộn 24", address: "Nguyễn Ái Quốc", latitude: 10.9632, longitude: 106.8501, category: "Phở", image: "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43" },
 
   // 9. Cháo
-  { id: "r19", name: "Cháo Lòng Bé Ba", address: "Nguyễn Ái Quốc", latitude: 10.9632, longitude: 106.8501, category: "Cháo", image: "https://images.unsplash.com/photo-1611143669185-af224c5e3252" },
-  { id: "r20", name: "Cháo Ếch Singapore", address: "Phan Đình Phùng", latitude: 10.9501, longitude: 106.8288, category: "Cháo", image: "https://images.unsplash.com/photo-1611143669185-af224c5e3252" },
+  { id: "r19", name: "Cháo Lòng Bé Ba", address: "Nguyễn Ái Quốc", latitude: 10.9632, longitude: 106.8501, category: "Cháo", image: "https://image.pollinations.ai/prompt/warm%20comforting%20Vietnamese%20congee%20porridge%20bowl%20with%20garnish%20realistic%20food?width=800&height=600&nologo=true" },
+  { id: "r20", name: "Cháo Ếch Singapore", address: "Phan Đình Phùng", latitude: 10.9501, longitude: 106.8288, category: "Cháo", image: "https://image.pollinations.ai/prompt/warm%20comforting%20Vietnamese%20congee%20porridge%20bowl%20with%20garnish%20realistic%20food?width=800&height=600&nologo=true" },
 
   // 10. Bún Bò
   { id: "r21", name: "Bún Bò Nam Giao", address: "Cách Mạng Tháng 8", latitude: 10.9455, longitude: 106.8210, category: "Bún Bò", image: "https://images.unsplash.com/photo-1555126634-323283e090fa" },
@@ -48,16 +48,16 @@ export const restaurants: Restaurant[] = [
   { id: "r24", name: "Nama Chocolate Shop", address: "Phan Trung", latitude: 10.9590, longitude: 106.8465, category: "Chocolate", image: "https://images.unsplash.com/photo-1549007994-cb92caebd54b" },
 
   // 12. Soup
-  { id: "r25", name: "Soup Cua Nhà Thờ", address: "Khu Chợ Đêm", latitude: 10.9520, longitude: 106.8300, category: "Soup", image: "https://images.unsplash.com/photo-1569562211093-4ed0d0758f12" },
-  { id: "r26", name: "Soup Bong Bóng Cá", address: "Phạm Văn Thuận", latitude: 10.9560, longitude: 106.8450, category: "Soup", image: "https://images.unsplash.com/photo-1569562211093-4ed0d0758f12" },
+  { id: "r25", name: "Soup Cua Nhà Thờ", address: "Khu Chợ Đêm", latitude: 10.9520, longitude: 106.8300, category: "Soup", image: "https://image.pollinations.ai/prompt/creamy%20Asian%20style%20warm%20soup%20in%20a%20bowl%20light%20aesthetic%20food%20photography?width=800&height=600&nologo=true" },
+  { id: "r26", name: "Soup Bong Bóng Cá", address: "Phạm Văn Thuận", latitude: 10.9560, longitude: 106.8450, category: "Soup", image: "https://image.pollinations.ai/prompt/creamy%20Asian%20style%20warm%20soup%20in%20a%20bowl%20light%20aesthetic%20food%20photography?width=800&height=600&nologo=true" },
 
   // 13. Bánh Mì
-  { id: "r27", name: "Bánh Mì Đồng Nai", address: "Phan Đình Phùng", latitude: 10.9501, longitude: 106.8288, category: "Bánh Mì", image: "https://images.unsplash.com/photo-1600271886742-f049cd451bba" },
-  { id: "r28", name: "Bánh Mì Tuấn Mập", address: "Cách Mạng Tháng 8", latitude: 10.9455, longitude: 106.8210, category: "Bánh Mì", image: "https://images.unsplash.com/photo-1600271886742-f049cd451bba" },
+  { id: "r27", name: "Bánh Mì Đồng Nai", address: "Phan Đình Phùng", latitude: 10.9501, longitude: 106.8288, category: "Bánh Mì", image: "https://image.pollinations.ai/prompt/authentic%20Vietnamese%20banh%20mi%20sandwich%20crispy%20baguette%20with%20meat%20filling%20and%20herbs?width=800&height=600&nologo=true" },
+  { id: "r28", name: "Bánh Mì Tuấn Mập", address: "Cách Mạng Tháng 8", latitude: 10.9455, longitude: 106.8210, category: "Bánh Mì", image: "https://image.pollinations.ai/prompt/authentic%20Vietnamese%20banh%20mi%20sandwich%20crispy%20baguette%20with%20meat%20filling%20and%20herbs?width=800&height=600&nologo=true" },
 
   // 14. Matcha
-  { id: "r29", name: "Morico", address: "Vincom Biên Hòa", latitude: 10.9547, longitude: 106.8422, category: "Matcha", image: "https://images.unsplash.com/photo-1582787031154-8e1f56a59ec1" },
-  { id: "r30", name: "TocoToco", address: "Phan Trung", latitude: 10.9585, longitude: 106.8465, category: "Matcha", image: "https://images.unsplash.com/photo-1582787031154-8e1f56a59ec1" },
+  { id: "r29", name: "Morico", address: "Vincom Biên Hòa", latitude: 10.9547, longitude: 106.8422, category: "Matcha", image: "https://image.pollinations.ai/prompt/iced%20green%20matcha%20latte%20in%20a%20glass%20cafe%20aesthetic?width=800&height=600&nologo=true" },
+  { id: "r30", name: "TocoToco", address: "Phan Trung", latitude: 10.9585, longitude: 106.8465, category: "Matcha", image: "https://image.pollinations.ai/prompt/iced%20green%20matcha%20latte%20in%20a%20glass%20cafe%20aesthetic?width=800&height=600&nologo=true" },
 
   // 15. Sushi
   { id: "r31", name: "Sushi Kei", address: "Vincom Biên Hòa", latitude: 10.9546, longitude: 106.8429, category: "Sushi", image: "https://images.unsplash.com/photo-1553621042-f6e147245754" },
@@ -92,16 +92,16 @@ export const restaurants: Restaurant[] = [
   { id: "r46", name: "Villa Restaurant", address: "KDL Bửu Long", latitude: 10.9680, longitude: 106.8150, category: "Fine dining", image: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c" },
 
   // 23. Ăn Vặt
-  { id: "r47", name: "Bánh Tráng Trộn Cô Út", address: "Cổng 2 Biên Hòa", latitude: 10.9550, longitude: 106.8370, category: "Ăn Vặt", image: "https://images.unsplash.com/photo-1525648199074-cee30ba79a4a" },
-  { id: "r48", name: "Cá Viên Chiên", address: "Quảng trường Tỉnh", latitude: 10.9600, longitude: 106.8400, category: "Ăn Vặt", image: "https://images.unsplash.com/photo-1525648199074-cee30ba79a4a" },
+  { id: "r47", name: "Bánh Tráng Trộn Cô Út", address: "Cổng 2 Biên Hòa", latitude: 10.9550, longitude: 106.8370, category: "Ăn Vặt", image: "https://image.pollinations.ai/prompt/mixed%20Vietnamese%20street%20snacks%20fries%20fish%20balls%20fried%20food?width=800&height=600&nologo=true" },
+  { id: "r48", name: "Cá Viên Chiên", address: "Quảng trường Tỉnh", latitude: 10.9600, longitude: 106.8400, category: "Ăn Vặt", image: "https://image.pollinations.ai/prompt/mixed%20Vietnamese%20street%20snacks%20fries%20fish%20balls%20fried%20food?width=800&height=600&nologo=true" },
 
   // 24. Xiên Que
   { id: "r49", name: "Xiên Que Tự Chọn", address: "Đường 5", latitude: 10.9515, longitude: 106.8410, category: "Xiên Que", image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1" },
   { id: "r50", name: "Hồ Khô Mực", address: "Gần Ga Biên Hòa", latitude: 10.9450, longitude: 106.8285, category: "Xiên Que", image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1" },
 
   // 25. Ốc Đêm
-  { id: "r51", name: "Ốc Mập Biên Hòa", address: "Đường 5 nối dài", latitude: 10.9601, longitude: 106.8395, category: "Ốc Đêm", image: "https://images.unsplash.com/photo-1626132647523-66f5bf380027" },
-  { id: "r52", name: "Ốc Loan", address: "Cách Mạng Tháng 8", latitude: 10.9470, longitude: 106.8230, category: "Ốc Đêm", image: "https://images.unsplash.com/photo-1626132647523-66f5bf380027" },
+  { id: "r51", name: "Ốc Mập Biên Hòa", address: "Đường 5 nối dài", latitude: 10.9601, longitude: 106.8395, category: "Ốc Đêm", image: "https://image.pollinations.ai/prompt/Vietnamese%20street%20seafood%20snails%20night%20eating%20vibe%20street%20food?width=800&height=600&nologo=true" },
+  { id: "r52", name: "Ốc Loan", address: "Cách Mạng Tháng 8", latitude: 10.9470, longitude: 106.8230, category: "Ốc Đêm", image: "https://image.pollinations.ai/prompt/Vietnamese%20street%20seafood%20snails%20night%20eating%20vibe%20street%20food?width=800&height=600&nologo=true" },
 
   // 26. Bia Craft
   { id: "r53", name: "C-Brewmaster Biên Hòa", address: "Đường số 7", latitude: 10.9515, longitude: 106.8410, category: "Bia Craft", image: "https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7" },

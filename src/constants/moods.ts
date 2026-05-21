@@ -1,25 +1,25 @@
-import { Mood, Food } from "../types";
+import { Food, Mood } from "../types";
 
 export const allFoods: Food[] = [
   // HAPPY (7)
   { id: "f1", name: "Thịt Nướng BBQ", emoji: "🍖", category: "BBQ", imageUrl: "https://images.unsplash.com/photo-1529193591184-b1d58069ecdd", description: "Ăn mừng thả ga, tiếng xèo xèo nịnh tai", moodMatch: ["Happy"] },
   { id: "f2", name: "Pizza", emoji: "🍕", category: "Pizza", imageUrl: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38", description: "Cheese ngập tràn, chia sẻ niềm vui", moodMatch: ["Happy"] },
   { id: "f3", name: "Gà Rán", emoji: "🍗", category: "Gà Rán", imageUrl: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec", description: "Giòn rụm béo ngậy, niềm vui bùng nổ", moodMatch: ["Happy"] },
-  { id: "f4", name: "Trà Sữa", emoji: "🧋", category: "Trà Sữa", imageUrl: "https://images.unsplash.com/photo-1558138838-7629396cb726", description: "Ngọt ngào, nhai trân châu vui miệng", moodMatch: ["Happy", "Chill"] },
+  { id: "f4", name: "Trà Sữa", emoji: "🧋", category: "Trà Sữa", imageUrl: "https://image.pollinations.ai/prompt/colorful%20Vietnamese%20bubble%20tea%20with%20visible%20tapioca%20pearls%20toppings%20cafe%20aesthetic?width=800&height=600&nologo=true", description: "Ngọt ngào, nhai trân châu vui miệng", moodMatch: ["Happy", "Chill"] },
   { id: "f5", name: "Buffet", emoji: "🍽️", category: "Buffet", imageUrl: "https://images.unsplash.com/photo-1576867757603-05b134ebc379", description: "Ăn không giới hạn, trọn vẹn niềm vui", moodMatch: ["Happy"] },
- { id: "f6", name: "Lẩu Thái", emoji: "🍲", category: "Lẩu Thái", imageUrl: "https://images.unsplash.com/photo-1552611052-33e04de081de", description: "Cay nồng, sôi động, tụ tập là chuẩn", moodMatch: ["Happy", "Chill"] },
+  { id: "f6", name: "Lẩu Thái", emoji: "🍲", category: "Lẩu Thái", imageUrl: "https://image.pollinations.ai/prompt/delicious%20Thai%20seafood%20hotpot%20with%20shrimp%20mushrooms%20noodles%20spicy%20soup%20realistic%20food%20photography?width=800&height=600&nologo=true", description: "Cay nồng, sôi động, tụ tập là chuẩn", moodMatch: ["Happy", "Chill"] },
   { id: "f7", name: "Bánh Ngọt", emoji: "🍰", category: "Bánh Ngọt", imageUrl: "https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b", description: "Mừng ngày đặc biệt, ngọt ngào trọn vẹn", moodMatch: ["Happy", "Stressed"] },
 
   // SAD (6)
   { id: "f8", name: "Phở", emoji: "🍜", category: "Phở", imageUrl: "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43", description: "Nước dùng nóng hổi xoa dịu tâm hồn", moodMatch: ["Sad"] },
-  { id: "f9", name: "Cháo", emoji: "🥣", category: "Cháo", imageUrl: "https://images.unsplash.com/photo-1611143669185-af224c5e3252", description: "Nhẹ bụng, ấm áp cõi lòng", moodMatch: ["Sad"] },
+  { id: "f9", name: "Cháo", emoji: "🥣", category: "Cháo", imageUrl: "https://image.pollinations.ai/prompt/warm%20comforting%20Vietnamese%20congee%20porridge%20bowl%20with%20garnish%20realistic%20food?width=800&height=600&nologo=true", description: "Nhẹ bụng, ấm áp cõi lòng", moodMatch: ["Sad"] },
   { id: "f10", name: "Bún Bò", emoji: "🥢", category: "Bún Bò", imageUrl: "https://images.unsplash.com/photo-1555126634-323283e090fa", description: "Đậm đà hương vị quê hương", moodMatch: ["Sad"] },
   { id: "f11", name: "Chocolate", emoji: "🍫", category: "Chocolate", imageUrl: "https://images.unsplash.com/photo-1549007994-cb92caebd54b", description: "Chút ngọt đắng cân bằng cảm xúc", moodMatch: ["Sad"] },
-  { id: "f12", name: "Soup", emoji: "🍲", category: "Soup", imageUrl: "https://images.unsplash.com/photo-1569562211093-4ed0d0758f12", description: "Sự an ủi nhẹ nhàng", moodMatch: ["Sad"] },
-  { id: "f13", name: "Bánh Mì", emoji: "🥖", category: "Bánh Mì", imageUrl: "https://images.unsplash.com/photo-1600271886742-f049cd451bba", description: "Giòn rụm, thân thuộc, nhanh gọn", moodMatch: ["Sad", "Chill"] },
+  { id: "f12", name: "Soup", emoji: "🍲", category: "Soup", imageUrl: "https://image.pollinations.ai/prompt/creamy%20Asian%20style%20warm%20soup%20in%20a%20bowl%20light%20aesthetic%20food%20photography?width=800&height=600&nologo=true", description: "Sự an ủi nhẹ nhàng", moodMatch: ["Sad"] },
+  { id: "f13", name: "Bánh Mì", emoji: "🥖", category: "Bánh Mì", imageUrl: "https://image.pollinations.ai/prompt/authentic%20Vietnamese%20banh%20mi%20sandwich%20crispy%20baguette%20with%20meat%20filling%20and%20herbs?width=800&height=600&nologo=true", description: "Giòn rụm, thân thuộc, nhanh gọn", moodMatch: ["Sad", "Chill"] },
 
   // STRESS (6)
-  { id: "f14", name: "Matcha", emoji: "🍵", category: "Matcha", imageUrl: "https://images.unsplash.com/photo-1582787031154-8e1f56a59ec1", description: "Thư giãn tinh thần, dịu cơn stress", moodMatch: ["Stressed"] },
+  { id: "f14", name: "Matcha", emoji: "🍵", category: "Matcha", imageUrl: "https://image.pollinations.ai/prompt/iced%20green%20matcha%20latte%20in%20a%20glass%20cafe%20aesthetic?width=800&height=600&nologo=true", description: "Thư giãn tinh thần, dịu cơn stress", moodMatch: ["Stressed"] },
   { id: "f15", name: "Sushi", emoji: "🍣", category: "Sushi", imageUrl: "https://images.unsplash.com/photo-1553621042-f6e147245754", description: "Thanh mát, nhẹ nhàng, tinh tế", moodMatch: ["Stressed", "Romantic"] },
   { id: "f16", name: "Healthy Bowl", emoji: "🥗", category: "Healthy bowl", imageUrl: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd", description: "Thanh lọc cơ thể, tĩnh tâm", moodMatch: ["Stressed"] },
   { id: "f17", name: "Coffee", emoji: "☕", category: "Coffee", imageUrl: "https://images.unsplash.com/photo-1509042239860-f550ce710b93", description: "Khoảng lặng để tái tạo năng lượng", moodMatch: ["Stressed", "Chill"] },
@@ -33,9 +33,9 @@ export const allFoods: Food[] = [
   { id: "f23", name: "Salad", emoji: "🥗", category: "Salad", imageUrl: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe", description: "Tươi mới, tinh tế cho buổi hẹn hò", moodMatch: ["Romantic"] },
 
   // CHILL (5 exclusive, + Trà Sữa, Lẩu Thái, Coffee, Bánh Mì = 9)
-  { id: "f24", name: "Ăn Vặt", emoji: "🥡", category: "Ăn Vặt", imageUrl: "https://images.unsplash.com/photo-1525648199074-cee30ba79a4a", description: "Chút mặn ngọt đậm đà đường phố", moodMatch: ["Chill"] },
+  { id: "f24", name: "Ăn Vặt", emoji: "🥡", category: "Ăn Vặt", imageUrl: "https://image.pollinations.ai/prompt/mixed%20Vietnamese%20street%20snacks%20fries%20fish%20balls%20fried%20food?width=800&height=600&nologo=true", description: "Chút mặn ngọt đậm đà đường phố", moodMatch: ["Chill"] },
   { id: "f25", name: "Xiên Que", emoji: "🍢", category: "Xiên Que", imageUrl: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1", description: "Thong dong nhâm nhi buổi tối", moodMatch: ["Chill"] },
-  { id: "f26", name: "Ốc Đêm", emoji: "🐌", category: "Ốc Đêm", imageUrl: "https://images.unsplash.com/photo-1626132647523-66f5bf380027", description: "Tụ tập chém gió quên ngày tháng", moodMatch: ["Chill"] },
+  { id: "f26", name: "Ốc Đêm", emoji: "🐌", category: "Ốc Đêm", imageUrl: "https://image.pollinations.ai/prompt/Vietnamese%20street%20seafood%20snails%20night%20eating%20vibe%20street%20food?width=800&height=600&nologo=true", description: "Tụ tập chém gió quên ngày tháng", moodMatch: ["Chill"] },
   { id: "f27", name: "Bia Craft", emoji: "🍺", category: "Bia Craft", imageUrl: "https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7", description: "Uống bia ngắm phố, chuyện trò nhẹ nhàng", moodMatch: ["Chill"] },
 ];
 
