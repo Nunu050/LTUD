@@ -12,6 +12,7 @@ import {
   Share,
   Linking,
   Platform,
+  TouchableOpacity,
 } from "react-native";
 
 import {
@@ -102,170 +103,232 @@ export default function DiaryScreen() {
 
   const renderItem = ({ item }: any) => (
     <View style={styles.card}>
+      <View style={styles.cardHeader}>
+        <View style={styles.moodBadge}>
+          <Text style={styles.moodBadgeText}>{item.mood}</Text>
+        </View>
+        <Text style={styles.date}>
+          {item.createdAt?.toDate?.()?.toLocaleDateString()}
+        </Text>
+      </View>
+
       {item.imageUrl ? (
         <Image source={{ uri: item.imageUrl }} style={styles.image} />
-      ) : null}
+      ) : (
+        <View style={styles.noImagePlaceholder}>
+          <Text style={styles.noImageText}>🍽️</Text>
+        </View>
+      )}
 
-      <Text style={styles.food}>🍴 {item.food}</Text>
-      <Text style={styles.restaurant}>📍 {item.restaurant}</Text>
-      <Text style={styles.mood}>Mood: {item.mood}</Text>
-      <Text style={styles.review}>{item.review}</Text>
-      <Text style={styles.rating}>{"⭐".repeat(item.rating)}</Text>
-
-      {item.favorite && <Text style={styles.favorite}>❤️ Favorite</Text>}
-
-      <Text style={styles.date}>
-        {item.createdAt?.toDate?.()?.toLocaleDateString()}
-      </Text>
-
-      <View style={styles.actionRow}>
-        <Text style={styles.share} onPress={() => shareReview(item)}>
-          Share ↗️
-        </Text>
+      <View style={styles.content}>
+        <Text style={styles.foodName}>{item.food}</Text>
+        <Text style={styles.restaurantName}>📍 {item.restaurant}</Text>
+        {item.address ? <Text style={styles.addressText}>{item.address}</Text> : null}
         
-        {item.latitude && item.longitude && (
-          <Text 
-            style={styles.navigate} 
-            onPress={() => openNavigation(item.latitude, item.longitude, item.restaurant)}
-          >
-            Navigate 🗺️
-          </Text>
+        <View style={styles.ratingContainer}>
+          <Text style={styles.ratingStar}>{"⭐".repeat(item.rating)}</Text>
+          {item.favorite && <Text style={styles.favoriteText}>❤️ Loved it</Text>}
+        </View>
+
+        {item.review ? (
+          <Text style={styles.reviewText}>"{item.review}"</Text>
+        ) : (
+          <Text style={styles.reviewText}>"A memory worth keeping."</Text>
         )}
 
-        <Text style={styles.delete} onPress={() => deleteReview(item.id)}>
-          Delete 🗑️
-        </Text>
+        <View style={styles.actionRow}>
+          <TouchableOpacity style={styles.actionButton} onPress={() => shareReview(item)}>
+            <Text style={styles.shareText}>Share ↗️</Text>
+          </TouchableOpacity>
+          
+          {item.latitude && item.longitude && (
+            <TouchableOpacity style={styles.actionButton} onPress={() => openNavigation(item.latitude, item.longitude, item.restaurant)}>
+              <Text style={styles.navigateText}>Navigate 🗺️</Text>
+            </TouchableOpacity>
+          )}
+
+          <TouchableOpacity style={styles.actionButton} onPress={() => deleteReview(item.id)}>
+            <Text style={styles.deleteText}>Delete 🗑️</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>
-        Food Diary 📔
-      </Text>
+      <Text style={styles.title}>My Food Diary 📔</Text>
+      <Text style={styles.subtitle}>Your emotional culinary journey.</Text>
 
-      {reviews.length ===
-      0 ? (
-        <Text
-          style={
-            styles.empty
-          }
-        >
-          No food memories yet 🍜
-        </Text>
+      {reviews.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.empty}>No food memories yet 🍜</Text>
+          <Text style={styles.emptySub}>Start eating and logging your feelings!</Text>
+        </View>
       ) : (
         <FlatList
           data={reviews}
-          keyExtractor={(
-            item
-          ) => item.id}
-          renderItem={
-            renderItem
-          }
-          showsVerticalScrollIndicator={
-            false
-          }
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 100 }}
         />
       )}
     </View>
   );
 }
 
-const styles =
-  StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor:
-        COLORS.background,
-      padding: 20,
-    },
-
-    title: {
-      color:
-        COLORS.primary,
-      fontSize: 40,
-      fontWeight:
-        "bold",
-      marginTop: 50,
-      marginBottom: 30,
-    },
-
-    empty: {
-      color: "white",
-      fontSize: 20,
-    },
-
-    card: {
-      backgroundColor:
-        "#1e293b",
-      padding: 20,
-      borderRadius: 20,
-      marginBottom: 20,
-    },
-
-    image: {
-      width: "100%",
-      height: 220,
-      borderRadius: 20,
-      marginBottom: 20,
-    },
-
-    food: {
-      color: "white",
-      fontSize: 28,
-      fontWeight:
-        "bold",
-    },
-
-    restaurant: {
-      color: "#ff7b7b",
-      marginTop: 10,
-      fontSize: 18,
-    },
-
-    mood: {
-      color: "#ffd166",
-      marginTop: 10,
-      fontSize: 18,
-    },
-
-    review: {
-      color: "white",
-      marginTop: 15,
-      fontSize: 18,
-      lineHeight: 28,
-    },
-
-    rating: {
-      marginTop: 15,
-      fontSize: 24,
-    },
-
-    favorite: {
-      color: "#ff7b7b",
-      marginTop: 10,
-      fontSize: 18,
-    },
-
-    date: {
-      color: "#aaa",
-      marginTop: 15,
-    },
-
-    share: {
-      color: "#3b82f6",
-      marginTop: 15,
-      fontWeight:
-        "bold",
-      fontSize: 18,
-    },
-
-    delete: {
-      color: "#ef4444",
-      marginTop: 15,
-      fontWeight:
-        "bold",
-      fontSize: 18,
-    },
-  });
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+    paddingHorizontal: 20,
+    paddingTop: 60,
+  },
+  title: {
+    color: COLORS.primary,
+    fontSize: 34,
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+  subtitle: {
+    color: "#888",
+    fontSize: 16,
+    marginBottom: 25,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  empty: {
+    color: "white",
+    fontSize: 22,
+    fontWeight: "bold",
+  },
+  emptySub: {
+    color: "#888",
+    fontSize: 16,
+    marginTop: 10,
+  },
+  card: {
+    backgroundColor: COLORS.card,
+    borderRadius: 25,
+    marginBottom: 25,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.05)",
+  },
+  cardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+  },
+  moodBadge: {
+    backgroundColor: "rgba(255,209,102,0.2)",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+  },
+  moodBadgeText: {
+    color: "#ffd166",
+    fontWeight: "bold",
+    fontSize: 14,
+  },
+  date: {
+    color: "#aaa",
+    fontSize: 14,
+  },
+  image: {
+    width: "100%",
+    height: 250,
+  },
+  noImagePlaceholder: {
+    width: "100%",
+    height: 150,
+    backgroundColor: "#1e293b",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noImageText: {
+    fontSize: 40,
+  },
+  content: {
+    padding: 20,
+  },
+  foodName: {
+    color: "white",
+    fontSize: 26,
+    fontWeight: "bold",
+  },
+  restaurantName: {
+    color: "#ff7b7b",
+    fontSize: 18,
+    marginTop: 8,
+    fontWeight: "500",
+  },
+  addressText: {
+    color: "#888",
+    fontSize: 14,
+    marginTop: 4,
+    marginLeft: 24,
+  },
+  ratingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 15,
+    marginBottom: 15,
+  },
+  ratingStar: {
+    fontSize: 20,
+    marginRight: 10,
+  },
+  favoriteText: {
+    color: "#ff7b7b",
+    fontWeight: "bold",
+    fontSize: 14,
+    backgroundColor: "rgba(255,123,123,0.15)",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+  },
+  reviewText: {
+    color: "#cbd5e1",
+    fontSize: 16,
+    fontStyle: "italic",
+    lineHeight: 24,
+    marginBottom: 20,
+    borderLeftWidth: 3,
+    borderLeftColor: COLORS.primary,
+    paddingLeft: 10,
+  },
+  actionRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderTopWidth: 1,
+    borderTopColor: "rgba(255,255,255,0.05)",
+    paddingTop: 15,
+  },
+  actionButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 5,
+  },
+  shareText: {
+    color: "#3b82f6",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  navigateText: {
+    color: "#10b981",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  deleteText: {
+    color: "#ef4444",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+});

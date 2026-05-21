@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  Image,
-} from "react-native";
+
 import { useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { COLORS } from "../../constants/colors";
 import { MOODS, allFoods } from "../../constants/moods";
 import { Food } from "../../types";
@@ -52,7 +53,13 @@ export default function HomeScreen() {
                 borderWidth: 2,
               },
             ]}
-            onPress={() => setSelectedMood(item)}
+            onPress={() => {
+              if (item.title === "I Don't Know") {
+                navigation.navigate("IDontKnow");
+              } else {
+                setSelectedMood(item);
+              }
+            }}
           >
             <Text style={styles.moodEmoji}>{item.emoji}</Text>
             <Text style={styles.moodText}>{item.title}</Text>

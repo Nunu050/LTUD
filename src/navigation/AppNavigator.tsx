@@ -17,6 +17,7 @@ import LoginScreen from "../screens/auth/LoginScreen";
 import RegisterScreen from "../screens/auth/RegisterScreen";
 
 import RestaurantDetailScreen from "../screens/restaurant/RestaurantDetailScreen";
+import IDontKnowScreen from "../screens/home/IDontKnowScreen";
 
 const Stack =
   createNativeStackNavigator();
@@ -45,6 +46,10 @@ export default function AppNavigator() {
               component={
                 RestaurantDetailScreen
               }
+            />
+            <Stack.Screen
+              name="IDontKnow"
+              component={IDontKnowScreen}
             />
           </>
         ) : (

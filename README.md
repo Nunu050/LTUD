@@ -1,50 +1,94 @@
-# Welcome to your Expo app 👋
+# 🍽️ FoodMood — Emotional Food Recommendation App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**FoodMood** là một ứng dụng di động độc đáo giúp gợi ý món ăn dựa trên cảm xúc và tâm lý người dùng. Thay vì hỏi "Bạn muốn ăn gì?", ứng dụng hỏi "Hôm nay bạn cảm thấy thế nào?" để đưa ra những gợi ý "comfort food" (thức ăn chữa lành) mang đậm văn hóa ẩm thực Việt Nam.
 
-## Get started
+Ứng dụng là sự kết hợp hoàn hảo giữa ẩm thực, tâm lý học và trải nghiệm xã hội (Social Diary).
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## 🌟 Các tính năng nổi bật (Core Features)
 
-2. Start the app
+- **🎭 Mood-Based Recommendation:** Gợi ý thức ăn dựa trên 6 cung bậc cảm xúc (Happy, Sad, Stressed, Chill, Romantic, I Don't Know).
+- **🎡 I Don't Know Wheel:** Tính năng vòng quay thức ăn ngẫu nhiên siêu mượt mà dành cho người dùng mắc "hội chứng không biết ăn gì".
+- **🗺️ Interactive Map:** Tích hợp bản đồ tìm kiếm quán ăn thật xung quanh khu vực Biên Hòa / Đồng Nai với tọa độ chính xác, hỗ trợ chuyển hướng sang Google Maps.
+- **📔 Emotional Food Diary:** Viết nhật ký ăn uống cảm xúc, chia sẻ kỷ niệm cực "cozy" với bạn bè kèm theo hình ảnh, đánh giá và vị trí.
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## 🛠️ Công nghệ sử dụng (Tech Stack)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- **Frontend:** React Native, Expo, TypeScript.
+- **Backend/Database:** Firebase (Firestore, Cloud Storage, Authentication).
+- **Navigation:** React Navigation.
+- **Maps:** `react-native-maps`, `expo-location`.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+---
 
-## Get a fresh project
+## 🚀 Hướng dẫn Cài đặt & Chạy dự án (Installation & Setup)
 
-When you're ready, run:
+### 1. Yêu cầu hệ thống (Prerequisites)
+- Đã cài đặt [Node.js](https://nodejs.org/) (Khuyên dùng bản LTS).
+- Đã cài đặt `npm` hoặc `yarn`.
+- Tải ứng dụng **Expo Go** trên điện thoại di động (iOS / Android) để test app.
+
+### 2. Cài đặt (Installation)
+Mở terminal/command prompt và thực hiện các bước sau:
 
 ```bash
-npm run reset-project
+# Clone source code về máy (hoặc giải nén thư mục project)
+git clone <đường-dẫn-repo-của-bạn>
+cd foodmood
+
+# Cài đặt các thư viện phụ thuộc
+npm install
+# hoặc nếu dùng yarn
+yarn install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 3. Cấu hình Firebase (Firebase Setup)
+Dự án sử dụng Firebase làm backend. Bạn cần đảm bảo cấu hình Firebase đã được thiết lập đúng:
+- Mở file `src/firebase/config.ts`
+- Cập nhật thông tin `firebaseConfig` bằng thông tin từ Project Firebase của riêng bạn (API Key, Project ID, Database URL...).
 
-## Learn more
+### 4. Chạy ứng dụng (Running the App)
 
-To learn more about developing your project with Expo, look at the following resources:
+Khởi động Expo server bằng một trong các lệnh sau:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+# Khởi động bình thường
+npx expo start
 
-## Join the community
+# Khởi động và xóa cache (sử dụng khi ứng dụng bị lỗi cache)
+npx expo start -c
+```
 
-Join our community of developers creating universal apps.
+- Màn hình terminal sẽ hiện ra một mã **QR Code**.
+- Dùng camera (trên iOS) hoặc quét qua app **Expo Go** (trên Android) để mở ứng dụng ngay trên điện thoại thật của bạn.
+- Nhấn phím `a` trên terminal để mở máy ảo Android (cần cài đặt Android Studio).
+- Nhấn phím `i` trên terminal để mở máy ảo iOS (cần macOS và Xcode).
+- Nhấn phím `w` trên terminal để chạy phiên bản Web trực tiếp trên trình duyệt.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
+
+## 📁 Cấu trúc thư mục chính
+
+```text
+foodmood/
+├── src/
+│   ├── components/       # Các UI Component dùng chung (MoodCard, FoodCard, Tabs)
+│   ├── constants/        # Các hằng số cấu hình (colors, moods, danh sách đồ ăn)
+│   ├── data/             # CSDL Local (Ví dụ: danh sách nhà hàng có tọa độ thật)
+│   ├── firebase/         # Khởi tạo và cấu hình Firebase
+│   ├── navigation/       # Cấu hình chuyển màn hình (Stack, BottomTabs)
+│   ├── screens/          # Các màn hình (Home, Map, Diary, IDontKnow, RestaurantDetail, Auth)
+│   ├── types/            # Định nghĩa các Interface TypeScript
+│   └── ...
+├── App.tsx               # Entry point của ứng dụng
+└── app.json              # Cấu hình Expo Project
+```
+
+---
+
+
+
+*Đồ án mang tính chất demo và sử dụng dữ liệu quán ăn thật tại khu vực Biên Hòa nhằm đảm bảo tính thực tế. Chúc bạn có trải nghiệm tuyệt vời cùng FoodMood!* 💖

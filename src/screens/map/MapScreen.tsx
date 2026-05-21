@@ -11,6 +11,8 @@ import {
 import MapView, { Marker, Callout } from "react-native-maps";
 import * as Location from "expo-location";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { getDistance } from "geolib";
+
 import { COLORS } from "../../constants/colors";
 import { restaurants } from "../../data/restaurants";
 
@@ -25,8 +27,9 @@ export default function MapScreen() {
   const [loading, setLoading] = useState(true);
   const [nearbyRestaurants, setNearbyRestaurants] = useState<any[]>([]);
 
-  // Fix marker cache: depend on selectedFood
+  // BUG 5 FIX: Clear previous markers & stale state immediately on dependency change
   useEffect(() => {
+    setNearbyRestaurants([]);
     fetchNearbyRestaurants();
   }, [selectedFood]);
 
@@ -45,29 +48,45 @@ export default function MapScreen() {
       const coords = currentLocation.coords;
       setLocation(coords);
 
-      // Lọc các quán ăn được tuyển chọn thủ công dựa trên món ăn (không dùng GPS tìm kiếm tự động nữa)
+      // Lọc quán ăn theo đúng category (đã chuẩn hóa trong data)
       const filteredRestaurants = restaurants.filter(
         (r) => r.category.toLowerCase() === selectedFood.toLowerCase()
       );
 
-      setNearbyRestaurants(filteredRestaurants);
+      // BUG 4 FIX: Calculate exact distance and travel time for realism
+      const restaurantsWithDistance = filteredRestaurants.map(r => {
+        const distMeters = getDistance(
+          { latitude: coords.latitude, longitude: coords.longitude },
+          { latitude: r.latitude, longitude: r.longitude }
+        );
+        // Assuming ~40km/h average city speed in VN (approx 666 meters per minute)
+        const timeMins = Math.max(1, Math.ceil(distMeters / 666));
+        
+        return {
+          ...r,
+          distance: distMeters > 1000 ? `${(distMeters / 1000).toFixed(1)}km` : `${distMeters}m`,
+          time: `${timeMins} phút`
+        };
+      });
 
-      // Cải thiện Map Focus UX: Tự động zoom bọc lấy toàn bộ các quán ăn và vị trí User
-      if (filteredRestaurants.length > 0 && mapRef.current) {
-        const markers = filteredRestaurants.map((r: any) => ({
+      setNearbyRestaurants(restaurantsWithDistance);
+
+      // BUG 4 FIX: Smooth Auto-Focus Experience
+      if (restaurantsWithDistance.length > 0 && mapRef.current) {
+        const markers = restaurantsWithDistance.map((r: any) => ({
           latitude: r.latitude,
           longitude: r.longitude,
         }));
         markers.push({ latitude: coords.latitude, longitude: coords.longitude });
         
+        // Wait for MapView layout to finish rendering
         setTimeout(() => {
           mapRef.current?.fitToCoordinates(markers, {
-            edgePadding: { top: 70, right: 70, bottom: 70, left: 70 },
+            edgePadding: { top: 100, right: 80, bottom: 100, left: 80 },
             animated: true,
           });
-        }, 1000);
+        }, 800);
       } else if (mapRef.current) {
-        // Nếu không có quán, chỉ focus vào user
         setTimeout(() => {
           mapRef.current?.animateToRegion({
             latitude: coords.latitude,
@@ -75,7 +94,7 @@ export default function MapScreen() {
             latitudeDelta: 0.05,
             longitudeDelta: 0.05,
           });
-        }, 500);
+        }, 800);
       }
       
       setLoading(false);
@@ -85,10 +104,9 @@ export default function MapScreen() {
     }
   };
 
-  const openNavigation = (lat: number, lng: number) => {
+  const openNavigation = (lat: number, lng: number, label: string) => {
     const scheme = Platform.select({ ios: "maps://0,0?q=", android: "geo:0,0?q=" });
     const latLng = `${lat},${lng}`;
-    const label = "Restaurant";
     const url = Platform.select({
       ios: `${scheme}${label}@${latLng}`,
       android: `${scheme}${latLng}(${label})`
@@ -136,11 +154,15 @@ export default function MapScreen() {
             >
               <Callout 
                 tooltip 
-                onPress={() => openNavigation(restaurant.latitude, restaurant.longitude)}
+                onPress={() => openNavigation(restaurant.latitude, restaurant.longitude, restaurant.name)}
               >
                 <View style={styles.calloutContainer}>
                   <Text style={styles.calloutTitle}>{restaurant.name}</Text>
-                  <Text style={styles.calloutDesc}>{selectedFood}</Text>
+                  
+                  {/* BUG 4 FIX: Show realistic distance info */}
+                  <Text style={styles.calloutDesc}>
+                    {restaurant.distance} • {restaurant.time}
+                  </Text>
                   
                   <View style={styles.buttonRow}>
                     <Text 
@@ -167,7 +189,6 @@ export default function MapScreen() {
   );
 }
 
-// UI Style giữ nguyên tone màu Dark Mode sang trọng
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -199,7 +220,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 15,
     padding: 15,
-    width: 200,
+    width: 220,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -214,7 +235,8 @@ const styles = StyleSheet.create({
   },
   calloutDesc: {
     fontSize: 14,
-    color: "#666",
+    color: "#10b981",
+    fontWeight: "600",
     marginBottom: 10,
   },
   buttonRow: {
@@ -230,8 +252,8 @@ const styles = StyleSheet.create({
   navBtn: {
     backgroundColor: "#3b82f6",
     color: "white",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
     borderRadius: 8,
     overflow: "hidden",
     fontWeight: "600",
