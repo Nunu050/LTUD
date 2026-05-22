@@ -23,16 +23,20 @@ export default function LoginScreen({
 
   const handleLogin =
     () => {
+      const validEmails = [
+        "demo@foodmood.com",
+        "thai@foodmood.com",
+        "nhi@foodmood.com",
+      ];
       if (
-        email ===
-          "demo@foodmood.com" &&
+        validEmails.includes(email.toLowerCase().trim()) &&
         password === "123456"
       ) {
         setIsLoggedIn(true);
       } else {
         Alert.alert(
           "Login Failed",
-          "Demo account:\n\ndemo@foodmood.com\n123456"
+          "Try one of the demo accounts:\n\n- demo@foodmood.com / 123456\n- thai@foodmood.com / 123456\n- nhi@foodmood.com / 123456"
         );
       }
     };

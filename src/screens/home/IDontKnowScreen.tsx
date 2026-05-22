@@ -61,7 +61,7 @@ export default function IDontKnowScreen() {
   }, []);
 
   // Mode 2: Food Wheel
-  const [wheelFoods, setWheelFoods] = useState<string[]>(["Lẩu", "BBQ", "Sushi", "Ốc Đêm"]);
+  const [wheelFoods, setWheelFoods] = useState<string[]>(["Lẩu Thái", "BBQ", "Sushi", "Ốc Đêm", "Bún Bò", "Gà Rán", "Pizza", "Trà Sữa"]);
   const [newFood, setNewFood] = useState("");
   const spinValue = useRef(new Animated.Value(0)).current;
   const [spinning, setSpinning] = useState(false);
@@ -146,9 +146,12 @@ export default function IDontKnowScreen() {
               key={food.id}
               style={styles.foodCard}
               onPress={() =>
-                navigation.navigate("Map", {
-                  selectedFood: food.category,
-                  selectedMood: "I Don't Know",
+                navigation.navigate("Main", {
+                  screen: "Map",
+                  params: {
+                    selectedFood: food.category,
+                    selectedMood: "I Don't Know",
+                  },
                 })
               }
             >
@@ -229,9 +232,12 @@ export default function IDontKnowScreen() {
               <TouchableOpacity
                 style={styles.findButton}
                 onPress={() =>
-                  navigation.navigate("Map", {
-                    selectedFood: selectedWheelFood,
-                    selectedMood: "I Don't Know",
+                  navigation.navigate("Main", {
+                    screen: "Map",
+                    params: {
+                      selectedFood: selectedWheelFood,
+                      selectedMood: "I Don't Know",
+                    },
                   })
                 }
               >

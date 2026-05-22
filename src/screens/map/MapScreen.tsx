@@ -37,6 +37,21 @@ export default function MapScreen() {
     fetchNearbyRestaurants();
   }, [selectedFood]);
 
+  // Smooth Auto-Focus Camera when selected restaurant changes
+  useEffect(() => {
+    if (selectedRestaurant && mapRef.current) {
+      const timer = setTimeout(() => {
+        mapRef.current?.animateToRegion({
+          latitude: selectedRestaurant.latitude - 0.002, // Offset slightly to clear bottom card
+          longitude: selectedRestaurant.longitude,
+          latitudeDelta: 0.010,
+          longitudeDelta: 0.010,
+        }, 500);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [selectedRestaurant]);
+
   const fetchNearbyRestaurants = async () => {
     try {
       setLoading(true);
@@ -52,9 +67,12 @@ export default function MapScreen() {
       const coords = currentLocation.coords;
       setLocation(coords);
 
-      // Filter restaurants by category
+      // Filter restaurants by category (exact match or substring match)
       const filteredRestaurants = restaurants.filter(
-        (r) => r.category.toLowerCase() === selectedFood.toLowerCase()
+        (r) =>
+          r.category.toLowerCase() === selectedFood.toLowerCase() ||
+          r.category.toLowerCase().includes(selectedFood.toLowerCase()) ||
+          selectedFood.toLowerCase().includes(r.category.toLowerCase())
       );
 
       // Calculate exact distance and travel time
@@ -87,17 +105,34 @@ export default function MapScreen() {
 
       // Smooth Auto-Focus Experience
       if (restaurantsWithDistance.length > 0 && mapRef.current) {
-        const markers = restaurantsWithDistance.map((r: any) => ({
-          latitude: r.latitude,
-          longitude: r.longitude,
-        }));
-        markers.push({ latitude: coords.latitude, longitude: coords.longitude });
+        const markers = restaurantsWithDistance
+          .filter((r: any) => typeof r.latitude === "number" && typeof r.longitude === "number")
+          .map((r: any) => ({
+            latitude: r.latitude,
+            longitude: r.longitude,
+          }));
+        
+        // Only include user location if nearby (within 8km) to prevent global zoom-out
+        const isUserNearby = restaurantsWithDistance[0].distMeters < 8000;
+        if (isUserNearby && typeof coords.latitude === "number" && typeof coords.longitude === "number") {
+          markers.push({ latitude: coords.latitude, longitude: coords.longitude });
+        }
         
         setTimeout(() => {
-          mapRef.current?.fitToCoordinates(markers, {
-            edgePadding: { top: 120, right: 80, bottom: 260, left: 80 },
-            animated: true,
-          });
+          if (isUserNearby && markers.length > 1) {
+            mapRef.current?.fitToCoordinates(markers, {
+              edgePadding: { top: 120, right: 80, bottom: 260, left: 80 },
+              animated: true,
+            });
+          } else if (restaurantsWithDistance[0]) {
+            // If user is far or we only have a single marker, center directly on the nearest restaurant
+            mapRef.current?.animateToRegion({
+              latitude: restaurantsWithDistance[0].latitude - 0.002,
+              longitude: restaurantsWithDistance[0].longitude,
+              latitudeDelta: 0.010,
+              longitudeDelta: 0.010,
+            }, 600);
+          }
         }, 800);
       } else if (mapRef.current) {
         setTimeout(() => {
@@ -117,9 +152,13 @@ export default function MapScreen() {
     }
   };
 
-  const openNavigation = (lat: number, lng: number, label: string) => {
-    // Open Google Maps navigation directly
-    const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+  const openNavigation = (lat: number, lng: number, label: string, address?: string) => {
+    // Open Google Maps using a genuine search query which shows the real business details
+    let query = label;
+    if (address) {
+      query = `${label}, ${address}`;
+    }
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
     Linking.openURL(url).catch(() => {
       Alert.alert("Error", "Could not open Google Maps navigation link.");
     });
@@ -195,12 +234,6 @@ export default function MapScreen() {
                 }}
                 onPress={() => {
                   setSelectedRestaurant(restaurant);
-                  mapRef.current?.animateToRegion({
-                    latitude: restaurant.latitude - 0.003, // Slightly offset center so card doesn't cover marker
-                    longitude: restaurant.longitude,
-                    latitudeDelta: 0.015,
-                    longitudeDelta: 0.015,
-                  }, 400);
                 }}
               >
                 <View style={[
@@ -269,7 +302,8 @@ export default function MapScreen() {
                       openNavigation(
                         selectedRestaurant.latitude,
                         selectedRestaurant.longitude,
-                        selectedRestaurant.name
+                        selectedRestaurant.name,
+                        selectedRestaurant.address
                       )
                     }
                   >

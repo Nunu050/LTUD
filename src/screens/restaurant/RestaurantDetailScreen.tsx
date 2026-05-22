@@ -36,6 +36,7 @@ import {
 } from "../../firebase/config";
 
 import { COLORS } from "../../constants/colors";
+import { allFoods } from "../../constants/moods";
 
 export default function RestaurantDetailScreen({
   route,
@@ -137,6 +138,15 @@ export default function RestaurantDetailScreen({
             );
         }
 
+        if (!imageUrl) {
+          const matchedFood = allFoods.find(
+            (f) =>
+              f.category.toLowerCase() === food.name.toLowerCase() ||
+              f.name.toLowerCase() === food.name.toLowerCase()
+          );
+          imageUrl = matchedFood ? matchedFood.imageUrl : restaurant.image;
+        }
+
         await addDoc(
           collection(
             db,
@@ -146,9 +156,11 @@ export default function RestaurantDetailScreen({
             mood,
             food: food.name,
             restaurant: restaurant.name,
+            restaurantName: restaurant.name,
             address: restaurant.address,
             latitude: restaurant.latitude,
             longitude: restaurant.longitude,
+            mapsUrl: `https://www.google.com/maps/search/?api=1&query=${restaurant.latitude},${restaurant.longitude}`,
             review,
             rating,
             favorite,
