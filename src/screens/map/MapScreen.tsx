@@ -11,146 +11,177 @@ import {
   Image,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import * as Location from "expo-location";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { getDistance } from "geolib";
 
 import { COLORS } from "../../constants/colors";
 import { restaurants } from "../../data/restaurants";
+import { getUserLocation } from "../../services/locationService";
+import { calculateDistanceAndETA } from "../../utils/distance";
 
 export default function MapScreen() {
   const navigation: any = useNavigation();
   const route: any = useRoute();
   const mapRef = useRef<MapView>(null);
 
-  const selectedFood = route.params?.selectedFood || "Food";
+  const selectedFood = route.params?.selectedFood || "BBQ";
 
-  const [location, setLocation] = useState<Location.LocationObjectCoords | null>(null);
+  const [location, setLocation] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [nearbyRestaurants, setNearbyRestaurants] = useState<any[]>([]);
   const [selectedRestaurant, setSelectedRestaurant] = useState<any | null>(null);
 
-  // Clear previous markers & selected state immediately on category change
+  // Load and sync data on food change (race condition & stale state protection)
   useEffect(() => {
+    let active = true;
+
+    // Clear state variables immediately to avoid rendering stale items
     setNearbyRestaurants([]);
     setSelectedRestaurant(null);
-    fetchNearbyRestaurants();
-  }, [selectedFood]);
+    setLoading(true);
 
-  // Smooth Auto-Focus Camera when selected restaurant changes
-  useEffect(() => {
-    if (selectedRestaurant && mapRef.current) {
-      const timer = setTimeout(() => {
-        mapRef.current?.animateToRegion({
-          latitude: selectedRestaurant.latitude - 0.002, // Offset slightly to clear bottom card
-          longitude: selectedRestaurant.longitude,
-          latitudeDelta: 0.010,
-          longitudeDelta: 0.010,
-        }, 500);
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [selectedRestaurant]);
+    const loadData = async () => {
+      try {
+        const coords = await getUserLocation();
+        if (!active) return;
+        setLocation(coords);
 
-  const fetchNearbyRestaurants = async () => {
-    try {
-      setLoading(true);
-      const { status } = await Location.requestForegroundPermissionsAsync();
+        // Filter restaurants by category OR substring matches on name/address for robust wheel support
+        const filteredRestaurants = restaurants.filter((r) => {
+          const foodLower = selectedFood.toLowerCase();
 
-      if (status !== "granted") {
-        Alert.alert("Permission denied", "Allow location access to show your position on the map.");
-        setLoading(false);
-        return;
-      }
-
-      const currentLocation = await Location.getCurrentPositionAsync({});
-      const coords = currentLocation.coords;
-      setLocation(coords);
-
-      // Filter restaurants by category (exact match or substring match)
-      const filteredRestaurants = restaurants.filter(
-        (r) =>
-          r.category.toLowerCase() === selectedFood.toLowerCase() ||
-          r.category.toLowerCase().includes(selectedFood.toLowerCase()) ||
-          selectedFood.toLowerCase().includes(r.category.toLowerCase())
-      );
-
-      // Calculate exact distance and travel time
-      const restaurantsWithDistance = filteredRestaurants.map(r => {
-        const distMeters = getDistance(
-          { latitude: coords.latitude, longitude: coords.longitude },
-          { latitude: r.latitude, longitude: r.longitude }
-        );
-        // Assuming ~30km/h average city speed in VN (approx 500 meters per minute)
-        const timeMins = Math.max(1, Math.ceil(distMeters / 500));
-        
-        return {
-          ...r,
-          distMeters,
-          distance: distMeters > 1000 ? `${(distMeters / 1000).toFixed(1)}km` : `${distMeters}m`,
-          time: `${timeMins} phút`
-        };
-      });
-
-      // Sort by distance to find nearest
-      restaurantsWithDistance.sort((a, b) => a.distMeters - b.distMeters);
-      setNearbyRestaurants(restaurantsWithDistance);
-
-      // Auto focus nearest restaurant if available
-      if (restaurantsWithDistance.length > 0) {
-        setSelectedRestaurant(restaurantsWithDistance[0]);
-      } else {
-        setSelectedRestaurant(null);
-      }
-
-      // Smooth Auto-Focus Experience
-      if (restaurantsWithDistance.length > 0 && mapRef.current) {
-        const markers = restaurantsWithDistance
-          .filter((r: any) => typeof r.latitude === "number" && typeof r.longitude === "number")
-          .map((r: any) => ({
-            latitude: r.latitude,
-            longitude: r.longitude,
-          }));
-        
-        // Only include user location if nearby (within 8km) to prevent global zoom-out
-        const isUserNearby = restaurantsWithDistance[0].distMeters < 8000;
-        if (isUserNearby && typeof coords.latitude === "number" && typeof coords.longitude === "number") {
-          markers.push({ latitude: coords.latitude, longitude: coords.longitude });
-        }
-        
-        setTimeout(() => {
-          if (isUserNearby && markers.length > 1) {
-            mapRef.current?.fitToCoordinates(markers, {
-              edgePadding: { top: 120, right: 80, bottom: 260, left: 80 },
-              animated: true,
-            });
-          } else if (restaurantsWithDistance[0]) {
-            // If user is far or we only have a single marker, center directly on the nearest restaurant
-            mapRef.current?.animateToRegion({
-              latitude: restaurantsWithDistance[0].latitude - 0.002,
-              longitude: restaurantsWithDistance[0].longitude,
-              latitudeDelta: 0.010,
-              longitudeDelta: 0.010,
-            }, 600);
+          // Keep categories accurate mapping:
+          // Pizza -> pizza/pasta places
+          // Sushi -> sushi places
+          // BBQ -> BBQ/buffet places
+          // Matcha -> tea/cafe places (Matcha, Coffee, Tea, Trà Sữa)
+          // Steak -> steakhouse places
+          let targetCategories = [foodLower];
+          if (foodLower.includes("pizza")) {
+            targetCategories = ["pizza", "pasta"];
+          } else if (foodLower.includes("sushi")) {
+            targetCategories = ["sushi"];
+          } else if (foodLower.includes("bbq") || foodLower.includes("nướng")) {
+            targetCategories = ["bbq", "buffet"];
+          } else if (
+            foodLower.includes("matcha") ||
+            foodLower.includes("cà phê") ||
+            foodLower.includes("coffee") ||
+            foodLower.includes("trà") ||
+            foodLower.includes("tea") ||
+            catMatchesCafe(foodLower)
+          ) {
+            targetCategories = ["matcha", "coffee", "tea", "trà sữa"];
+          } else if (foodLower.includes("steak") || foodLower.includes("bít tết")) {
+            targetCategories = ["steak"];
           }
-        }, 800);
-      } else if (mapRef.current) {
-        setTimeout(() => {
-          mapRef.current?.animateToRegion({
+
+          // Helper to check if string contains cafe-like terms
+          function catMatchesCafe(str: string) {
+            const terms = ["quán nước", "nước", "sinh tố", "sữa", "trân châu", "juice", "smoothie"];
+            return terms.some(t => str.includes(t));
+          }
+
+          const categoryMatches = targetCategories.some(cat =>
+            r.category.toLowerCase() === cat ||
+            r.category.toLowerCase().includes(cat) ||
+            cat.includes(r.category.toLowerCase())
+          );
+
+          const nameMatches = r.name.toLowerCase().includes(foodLower);
+          const addressMatches = r.address.toLowerCase().includes(foodLower);
+
+          return categoryMatches || nameMatches || addressMatches;
+        });
+
+        // Calculate travel info using unified calculator
+        const restaurantsWithDistance = filteredRestaurants.map((r) => {
+          const stats = calculateDistanceAndETA(
+            coords.latitude,
+            coords.longitude,
+            r.latitude,
+            r.longitude
+          );
+          return {
+            ...r,
+            distMeters: stats.distMeters,
+            distance: stats.distanceStr,
+            time: stats.timeStr,
+          };
+        });
+
+        // Sort by distance to find nearest
+        restaurantsWithDistance.sort((a, b) => a.distMeters - b.distMeters);
+
+        if (!active) return;
+
+        setNearbyRestaurants(restaurantsWithDistance);
+
+        // Focus nearest restaurant initially if available
+        if (restaurantsWithDistance.length > 0) {
+          setSelectedRestaurant(restaurantsWithDistance[0]);
+        } else {
+          setSelectedRestaurant(null);
+        }
+
+        // Animate user location if no restaurants are found
+        if (restaurantsWithDistance.length === 0 && mapRef.current) {
+          mapRef.current.animateToRegion({
             latitude: coords.latitude,
             longitude: coords.longitude,
             latitudeDelta: 0.03,
             longitudeDelta: 0.03,
-          });
-        }, 800);
+          }, 500);
+        }
+
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        if (active) setLoading(false);
       }
-      
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
+    };
+
+    loadData();
+
+    return () => {
+      active = false;
+    };
+  }, [selectedFood]);
+
+  // Smooth Auto-Focus Camera when selected restaurant changes (Bug 3)
+  useEffect(() => {
+    if (selectedRestaurant && mapRef.current && location) {
+      const timer = setTimeout(() => {
+        const coordinates = [
+          { latitude: location.latitude, longitude: location.longitude },
+          { latitude: selectedRestaurant.latitude, longitude: selectedRestaurant.longitude },
+        ];
+
+        const dist = getDistance(
+          { latitude: location.latitude, longitude: location.longitude },
+          { latitude: selectedRestaurant.latitude, longitude: selectedRestaurant.longitude }
+        );
+
+        if (dist > 50 && dist < 15000) {
+          // Fit both user and selected restaurant with card padding offset
+          mapRef.current?.fitToCoordinates(coordinates, {
+            edgePadding: { top: 140, right: 100, bottom: 280, left: 100 },
+            animated: true,
+          });
+        } else {
+          // Direct center with smooth offset if too close or too far
+          mapRef.current?.animateToRegion({
+            latitude: selectedRestaurant.latitude - 0.002,
+            longitude: selectedRestaurant.longitude,
+            latitudeDelta: 0.012,
+            longitudeDelta: 0.012,
+          }, 600);
+        }
+      }, 200);
+      return () => clearTimeout(timer);
     }
-  };
+  }, [selectedRestaurant, location]);
+
 
   const openNavigation = (lat: number, lng: number, label: string, address?: string) => {
     // Open Google Maps using a genuine search query which shows the real business details
@@ -164,35 +195,35 @@ export default function MapScreen() {
     });
   };
 
-  const getMarkerEmoji = () => {
-    const foodLower = selectedFood.toLowerCase();
-    if (foodLower.includes("bbq")) return "🍖";
-    if (foodLower.includes("pizza")) return "🍕";
-    if (foodLower.includes("gà rán") || foodLower.includes("ga ran")) return "🍗";
-    if (foodLower.includes("trà sữa") || foodLower.includes("tra sua")) return "🧋";
-    if (foodLower.includes("buffet")) return "🍽️";
-    if (foodLower.includes("lẩu thái") || foodLower.includes("lau thai") || foodLower.includes("lẩu")) return "🍲";
-    if (foodLower.includes("bánh ngọt") || foodLower.includes("banh ngot")) return "🍰";
-    if (foodLower.includes("phở") || foodLower.includes("pho")) return "🍜";
-    if (foodLower.includes("cháo") || foodLower.includes("chao")) return "🥣";
-    if (foodLower.includes("bún bò") || foodLower.includes("bun bo")) return "🥢";
-    if (foodLower.includes("chocolate")) return "🍫";
-    if (foodLower.includes("soup")) return "🍲";
-    if (foodLower.includes("bánh mì") || foodLower.includes("banh mi")) return "🥖";
-    if (foodLower.includes("matcha")) return "🍵";
-    if (foodLower.includes("sushi")) return "🍣";
-    if (foodLower.includes("healthy")) return "🥗";
-    if (foodLower.includes("coffee") || foodLower.includes("cà phê")) return "☕";
-    if (foodLower.includes("tea") || foodLower.includes("trà")) return "🫖";
-    if (foodLower.includes("steak")) return "🥩";
-    if (foodLower.includes("pasta")) return "🍝";
-    if (foodLower.includes("wine") || foodLower.includes("rượu")) return "🍷";
-    if (foodLower.includes("fine dining") || foodLower.includes("sang trọng")) return "🥂";
-    if (foodLower.includes("ăn vặt") || foodLower.includes("an vat")) return "🍟";
-    if (foodLower.includes("xiên que") || foodLower.includes("xien que")) return "🍢";
-    if (foodLower.includes("ốc đêm") || foodLower.includes("oc dem") || foodLower.includes("ốc")) return "🐌";
-    if (foodLower.includes("bia craft") || foodLower.includes("bia")) return "🍺";
-    if (foodLower.includes("salad")) return "🥗";
+  const getMarkerEmoji = (category: string) => {
+    const catLower = category.toLowerCase();
+    if (catLower.includes("bbq")) return "🍖";
+    if (catLower.includes("pizza")) return "🍕";
+    if (catLower.includes("gà rán") || catLower.includes("ga ran")) return "🍗";
+    if (catLower.includes("trà sữa") || catLower.includes("tra sua")) return "🧋";
+    if (catLower.includes("buffet")) return "🍽️";
+    if (catLower.includes("lẩu thái") || catLower.includes("lau thai") || catLower.includes("lẩu")) return "🍲";
+    if (catLower.includes("bánh ngọt") || catLower.includes("banh ngot")) return "🍰";
+    if (catLower.includes("phở") || catLower.includes("pho")) return "🍜";
+    if (catLower.includes("cháo") || catLower.includes("chao")) return "🥣";
+    if (catLower.includes("bún bò") || catLower.includes("bun bo")) return "🥢";
+    if (catLower.includes("chocolate")) return "🍫";
+    if (catLower.includes("soup")) return "🍲";
+    if (catLower.includes("bánh mì") || catLower.includes("banh mi")) return "🥖";
+    if (catLower.includes("matcha")) return "🍵";
+    if (catLower.includes("sushi")) return "🍣";
+    if (catLower.includes("healthy")) return "🥗";
+    if (catLower.includes("coffee") || catLower.includes("cà phê")) return "☕";
+    if (catLower.includes("tea") || catLower.includes("trà")) return "🫖";
+    if (catLower.includes("steak")) return "🥩";
+    if (catLower.includes("pasta")) return "🍝";
+    if (catLower.includes("wine") || catLower.includes("rượu")) return "🍷";
+    if (catLower.includes("fine dining") || catLower.includes("sang trọng")) return "🥂";
+    if (catLower.includes("ăn vặt") || catLower.includes("an vat")) return "🍟";
+    if (catLower.includes("xiên que") || catLower.includes("xien que")) return "🍢";
+    if (catLower.includes("ốc đêm") || catLower.includes("oc dem") || catLower.includes("ốc")) return "🐌";
+    if (catLower.includes("bia craft") || catLower.includes("bia")) return "🍺";
+    if (catLower.includes("salad")) return "🥗";
     return "📍";
   };
 
@@ -227,7 +258,7 @@ export default function MapScreen() {
             {/* RESTAURANTS MARKERS */}
             {nearbyRestaurants.map((restaurant: any) => (
               <Marker
-                key={restaurant.id}
+                key={`${restaurant.id}_${selectedFood}_${selectedRestaurant?.id === restaurant.id}`}
                 coordinate={{
                   latitude: restaurant.latitude,
                   longitude: restaurant.longitude,
@@ -241,7 +272,7 @@ export default function MapScreen() {
                   selectedRestaurant?.id === restaurant.id && styles.selectedMarkerContainer
                 ]}>
                   <Text style={styles.markerEmoji}>
-                    {getMarkerEmoji()}
+                    {getMarkerEmoji(restaurant.category)}
                   </Text>
                 </View>
               </Marker>

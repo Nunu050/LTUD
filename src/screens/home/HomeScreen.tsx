@@ -54,10 +54,9 @@ export default function HomeScreen() {
               },
             ]}
             onPress={() => {
+              setSelectedMood(item);
               if (item.title === "I Don't Know") {
                 navigation.navigate("IDontKnow");
-              } else {
-                setSelectedMood(item);
               }
             }}
           >
